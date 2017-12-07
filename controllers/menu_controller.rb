@@ -15,6 +15,7 @@ require_relative '../models/address_book'
      puts "4 - Import entries from a CSV"
      puts "5 - View Entry Number"
      puts "6 - Exit"
+     puts "7 - Nuke all entries"
      print "Enter your selection: "
 
      selection = gets.to_i
@@ -31,7 +32,6 @@ require_relative '../models/address_book'
        when 3
          system "clear"
          search_entries
-         main_menu
        when 4
          system "clear"
          read_csv
@@ -39,10 +39,27 @@ require_relative '../models/address_book'
        when 5
          system "clear"
          specific_entry
-         main_menu
        when 6
          puts "Good-bye!"
          exit(0)
+       when 7
+         system "clear"
+         puts "3"
+         sleep(1)
+         system "clear"
+         puts "2"
+         sleep(1)
+         system "clear"
+         puts "1"
+         sleep(0.5)
+         system "clear"
+         puts "BOOOOOM!!!"
+         address_book.nuke
+         sleep(1)
+         system "clear"
+         main_menu
+
+
        else
          system "clear"
          puts "Sorry, that is not a valid input"
@@ -57,6 +74,8 @@ require_relative '../models/address_book'
        puts "Name - #{address_book.entries[entry_number].name}"
        puts "Phone Number - #{address_book.entries[entry_number].phone_number}"
        puts "Email - #{address_book.entries[entry_number].email}"
+
+       entry_submenu(entry_number)
      else
        puts "#{entry_number} is not a valid Entry Number"
        specific_entry
@@ -77,7 +96,7 @@ require_relative '../models/address_book'
    def create_entry
      system "clear"
      puts "New AddressBloc Entry"
-     # #12
+
      print "Name: "
      name = gets.chomp
      print "Phone number: "
@@ -107,14 +126,11 @@ require_relative '../models/address_book'
    end
 
    def search_submenu(entry)
-     # #12
      puts "\nd - delete entry"
      puts "e - edit this entry"
      puts "m - return to main menu"
-     # #13
      selection = gets.chomp
 
-     # #14
      case selection
        when "d"
          system "clear"
@@ -139,14 +155,12 @@ require_relative '../models/address_book'
      print "Enter CSV file to import: "
      file_name = gets.chomp
 
-     # #2
      if file_name.empty?
        system "clear"
        puts "No CSV file read"
        main_menu
      end
 
-     # #3
      begin
        entry_count = address_book.import_from_csv(file_name).count
        system "clear"
@@ -158,8 +172,11 @@ require_relative '../models/address_book'
    end
 
    def delete_entry(entry)
-     address_book.entries.delete(entry)
-     puts "#{entry.name} has been deleted"
+     address_book.entries.delete_at(entry)
+     system "clear"
+     puts "#{address_book.entries[entry].name} has been deleted"
+     system "clear"
+     main_menu
    end
 
    def edit_entry(entry)
